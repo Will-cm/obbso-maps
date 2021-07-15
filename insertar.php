@@ -35,12 +35,19 @@ function get_url($url)
         {
             $url = str_replace("location: ","",$fields[$i]);
         }
+
+        if(strpos($fields[$i],'Location') !== false)
+        {
+            $url = str_replace("Location: ","",$fields[$i]);
+        }
+
     }
     return $url;
 }
 
 //$url_objetivo = get_url($enlace);
-
+/////////INICIO
+$match = array();
 if(strlen($url) > 5){
   //$url =substr($url, 0, strlen($url)-2); quitar caracteres
   //echo $url;
@@ -48,7 +55,7 @@ if(strlen($url) > 5){
   //echo  strlen($url);
   if( exist($url, 'goo.gl') == 1 ){ // 37  //if(strlen($url) == 37)
     $url_objetivo = get_url($url);
-    echo $url_objetivo;
+    //echo $url_objetivo;
   }
   //obtener coordenadas
   if( exist($url, 'q=') == 1 ){  //if(strlen($url)>=45 && strlen($url)<=55)
@@ -107,14 +114,14 @@ if(strlen($url) > 5){
               }
               $lat = $match[0];
             } else {
-              echo '<div>'.($n=$i+1). "). " . "Error al obtener coordenadas (!3d) de :" .'</div>';
+              echo '<div>'.(1). "). " . "Error al obtener coordenadas (!3d) de :" .'</div>';
               echo $url_objetivo;
               //var_dump($match);
             }
 
           }
       } else {
-        echo '<div>'.($n=$i+1). "). " . "Error!! url desconocido :" .'</div>';
+        echo '<div>'.(1). "). " . "Error!! url desconocido :" .'</div>';
         echo $url_objetivo;
       }
 

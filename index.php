@@ -7,10 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link type="text/css" rel="shortcut icon" href="img/logo-mywebsite-urian-viera.svg"/>
   <title>Mapa :: Obbso</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/cargando.css">
   <link rel="stylesheet" type="text/css" href="css/cssGenerales.css">
+<!-- jquery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
 
@@ -35,7 +39,7 @@
 
  <div class="row">
     <div class="col-md-5">
-      <form action="upload_excel.php" method="POST" enctype="multipart/form-data">
+      <!-- <form action="upload_excel.php" method="POST" enctype="multipart/form-data">
         <div class="file-input text-center">
             <input  type="file" name="dataCliente" id="file-input" class="file-input__input"/>
             <label class="file-input__label" for="file-input">
@@ -46,7 +50,45 @@
         <div class="text-center">
             <input type="submit" name="subir" class="btn-enviar" value="Subir Excel"/>
         </div>
-      </form>
+      </form> -->
+      <!-- otro -->
+      <!-- <form action="#" enctype="multipart/form-data" id ="filesForm">
+        <div class="file-input text-center">
+            <input  type="file" name="dataCliente2" id="file-input" class="file-input__input"/>
+            <label class="file-input__label" for="file-input">
+              <i class="zmdi zmdi-upload zmdi-hc-2x"></i>
+              <span>Elegir Archivo Excel</span></label
+            >
+          </div>
+          <div class="text-center">
+            <button type="button" onClick="uploadFile()" class="btn btn-primary mx-sm-3 mb-2">Subir excel</button>
+          </div>
+        <br> 
+        <div id="respuesta">Resultado de carga: </div>       
+      </form> -->
+      <!-- otro -->
+      <!-- otro -->
+      <div class="card">
+        <div class="card-header">Sube tu archivo</div>
+        <div class="card-body">
+          <form class="upload_file">
+            <div class="form-group">
+              <label for="file">Archivo a subir</label>
+              <input type="file" class="form-control form-control-file" name="dataCliente" id="dataCliente" required>
+            </div>
+
+            <button class="btn btn-success" type="submit">Subir archivo</button>
+
+            <div class="wrapper mt-5" style="display: none;">
+              <div class="progress progress_wrapper">
+                <div class="progress-bar progress-bar-striped bg-info progress-bar-animated progress_bar" role="progressbar" style="width: 0%;">0%</div>
+              </div>
+            </div>
+          </form>
+          
+        </div>
+      </div>
+      <!-- otro -->
       <hr>
       <form action="insertar.php" method="POST">
         <div class="form-group mx-sm-3 mb-2">
@@ -86,7 +128,7 @@
     )
   );
 
-  header("Content-Type: text/html;charset=utf-8");
+  //header("Content-Type: text/html;charset=utf-8");
   //include('config.php');
   include_once 'conexion.php';
   $sqlZonas = ("SELECT * FROM zonas");
@@ -287,6 +329,26 @@
 
 </div>
 
+<!-- Script de cargar excel -->
+<script type="text/javascript">
+  function uploadFile() {
+    var form_data = new FormData();
+    var files = $("#file-input")[0].files[0];
+    form_data.append('dataCliente', files);
+      $.ajax({
+        url: "upload_excel.php",
+        type: "post",
+        data: form_data,
+        processData: false,
+        contentType: false,
+      })
+      .done(function(res) {
+        $('#respuesta').html(res)
+        alert('Registros Agregados: ' + res);
+      });   
+  }
+</script>
+
 <!-- Script de búsqueda -->
 <script>
   // Busco todos los controles de búsqueda.
@@ -428,6 +490,9 @@
 <script src="js/jquery.min.js"></script>
 <script src="'js/popper.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="js/main.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {

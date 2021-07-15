@@ -2,12 +2,26 @@
 set_time_limit(3600); ////maximo 60 minutos de espera
 //require('config.php');
 include_once 'conexion.php';
+
 $url_objetivo = '';
 
 $tipo       = $_FILES['dataCliente']['type'];   //dataCliente
 $tamanio    = $_FILES['dataCliente']['size'];
 $archivotmp = $_FILES['dataCliente']['tmp_name'];
 $lineas     = file($archivotmp);
+
+
+//////vvvv
+function json_output($status = 200, $msg = 'OK', $data = null){
+  header('Content-Type: aplication/json');
+  echo json_encode([
+    'status' => $status,
+    'msg' => $msg,
+    'data' => $data
+  ]);
+  die;
+}
+//////vvvv
 
 ///Devuelve 1 si existe el parametro $word buscado
 function indexOf($array, $word) {
@@ -38,21 +52,15 @@ function get_url($url)
         {
             $url = str_replace("location: ","",$fields[$i]);
         }
+        if(strpos($fields[$i],'Location') !== false)
+        {
+            $url = str_replace("Location: ","",$fields[$i]);
+        }
     }
     return $url;
 }
 
-///Devuelve 1 si no existe en db
-function verificarDB($url){
-    $check_duplicidad = ("SELECT enlace FROM zonas WHERE enlace=:enlace ");  //
-    $sentencia1 = $this->$pdo->prepare($check_duplicidad);     //
-    $sentencia1->bindParam(':enlace', $url, PDO::PARAM_STR);   //
-    $sentencia1->execute();
-    $res = $sentencia1->fetchAll();
-    $cant_duplicidad = count($res);
-    if($cant_duplicidad == 0) return 0;   //no existe Duplicados
-    return -1;  ////si existe Duplicados  
-}
+
 
 /////INICIO
 $match = array();
@@ -94,7 +102,7 @@ foreach ($lineas as $linea) {
                   }
                   $lat = $match[1];
                 } else { 
-                  echo '<div>'.($n=$i+1). "). " . "Error al obtener coordenadas (q=) de : " .$url.'</div>';
+                  //------echo '<div>'.($n=$i+1). "). " . "Error al obtener coordenadas (q=) de : " .$url.'</div>';
                   //echo $url; 
                 }
             } else {
@@ -133,12 +141,12 @@ foreach ($lineas as $linea) {
                         }
                         $lat = $match[0];
                       } else {
-                        echo '<div>'.($n=$i+1). "). " . "Error al obtener coordenadas (!3d) de : " .$url_objetivo.'</div>';
+                        //-----echo '<div>'.($n=$i+1). "). " . "Error al obtener coordenadas (!3d) de : " .$url_objetivo.'</div>';
                       }
           
                     }
                 } else {
-                  echo '<div>'.($n=$i+1). "). " . "Error!! url desconocido : " .$url_objetivo.'</div>';
+                  //------echo '<div>'.($n=$i+1). "). " . "Error!! url desconocido : " .$url_objetivo.'</div>';
                   //echo $url_objetivo;
                 }
               
@@ -174,8 +182,13 @@ foreach ($lineas as $linea) {
 }
 
 
-  echo '<p style="text-aling:center; color:#333;">Total Registros: '. $contador .' de: '. $cantidad_registros .'</p>';
+//  echo '<p style="text-aling:center; color:#333;">Total Registros: '. $contador .' de: '. $cantidad_registros .'</p>';
+//echo $contador .'  de:  '. $cantidad_registros;
+if ($contador === 0) {
+  json_output(400, 'Hubo un error al subir el archivo.');
+}
 
+json_output(200, 'Archivo subido con exito.', $contador);
 ?>
-
-<a href="index.php">Atras</a>
+<!-- otro -->
+<!-- <a href="index.php">Atras</a>    -->
